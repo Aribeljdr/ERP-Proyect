@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { ExpensesTable } from '@/components/expenses/expenses-table'
@@ -16,7 +17,7 @@ export default function ExpensesPage() {
   const handleDelete = (e: any) => setDeleteExpense(e)
   const confirmDelete = async () => {
     if (!deleteExpense) return
-    await fetch(`http://localhost:4000/api/v1/expenses/${deleteExpense.id}`, { method: 'DELETE' })
+    await api.expenses.delete(deleteExpense.id)
     setDeleteExpense(null)
     setRefreshKey(k => k + 1)
   }
@@ -38,7 +39,7 @@ export default function ExpensesPage() {
       <ConfirmDialog
         open={!!deleteExpense}
         title="Eliminar gasto"
-        message={`¿Eliminar "${deleteExpense?.description}"? Esta acción no se puede deshacer.`}
+        message={`Ãƒâ€šÃ‚Â¿Eliminar "${deleteExpense?.description}"? Esta acciÃƒÆ’Ã‚Â³n no se puede deshacer.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteExpense(null)}
       />

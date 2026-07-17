@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -22,8 +23,8 @@ export function AttendanceTable({ onEdit, onDelete }: { onEdit: (e: any) => void
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/attendance?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/attendance/summary').then(r => r.json()),
+      api.attendance.list({ page, limit: 10 }),
+      api.attendance.summary(),
     ])
     setRecords(res.data)
     setTotal(res.total)
@@ -68,8 +69,8 @@ export function AttendanceTable({ onEdit, onDelete }: { onEdit: (e: any) => void
                 <tr key={r.id} className="hover:bg-hover transition-all" style={{ borderTop: '1px solid var(--border,#E8EDF3)' }}>
                   <td className="px-4 py-3.5 text-[13.5px] font-semibold" style={{ color: 'var(--text)' }}>{r.employeeName}</td>
                   <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--text)' }}>{r.date}</td>
-                  <td className="px-4 py-3.5 text-[13px]" style={{ color: r.checkIn ? 'var(--text)' : 'var(--muted)' }}>{r.checkIn || '—'}</td>
-                  <td className="px-4 py-3.5 text-[13px]" style={{ color: r.checkOut ? 'var(--text)' : 'var(--muted)' }}>{r.checkOut || '—'}</td>
+                  <td className="px-4 py-3.5 text-[13px]" style={{ color: r.checkIn ? 'var(--text)' : 'var(--muted)' }}>{r.checkIn || 'â€”'}</td>
+                  <td className="px-4 py-3.5 text-[13px]" style={{ color: r.checkOut ? 'var(--text)' : 'var(--muted)' }}>{r.checkOut || 'â€”'}</td>
                   <td className="px-4 py-3.5"><span className="inline-flex text-xs font-semibold px-2.5 py-1 rounded-full" style={{ color: st.color, background: st.bg }}>{st.label}</span></td>
                   <td className="px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1">

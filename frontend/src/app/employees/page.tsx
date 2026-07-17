@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { EmployeesTable } from '@/components/employees/employees-table'
@@ -16,7 +17,7 @@ export default function EmployeesPage() {
   const handleDelete = (e: any) => setDeleteItem(e)
   const confirmDelete = async () => {
     if (!deleteItem) return
-    await fetch(`http://localhost:4000/api/v1/employees/${deleteItem.id}`, { method: 'DELETE' })
+    await api.employees.delete(deleteItem.id)
     setDeleteItem(null)
     setRefreshKey(k => k + 1)
   }
@@ -38,7 +39,7 @@ export default function EmployeesPage() {
       <ConfirmDialog
         open={!!deleteItem}
         title="Eliminar empleado"
-        message={`¿Eliminar a "${deleteItem?.firstName} ${deleteItem?.lastName}"? Esta acción no se puede deshacer.`}
+        message={`Ãƒâ€šÃ‚Â¿Eliminar a "${deleteItem?.firstName} ${deleteItem?.lastName}"? Esta acciÃƒÆ’Ã‚Â³n no se puede deshacer.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteItem(null)}
       />

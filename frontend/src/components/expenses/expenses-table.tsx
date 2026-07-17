@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -17,8 +18,8 @@ export function ExpensesTable({ onEdit, onDelete }: { onEdit: (e: any) => void; 
 
   const fetchData = async () => {
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/expenses?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/expenses/summary').then(r => r.json()),
+      api.expenses.list({ page, limit: 10 }),
+      api.expenses.summary(),
     ])
     setExpenses(res.data)
     setTotal(res.total)
@@ -42,8 +43,8 @@ export function ExpensesTable({ onEdit, onDelete }: { onEdit: (e: any) => void; 
       <div className="overflow-x-auto">
         <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '820px' }}>
           <thead><tr style={{ background: 'var(--bg,#F8FAFC)' }}>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Descripción</th>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Categoría</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">DescripciÃ³n</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">CategorÃ­a</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Monto</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Fecha</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Pago</th>

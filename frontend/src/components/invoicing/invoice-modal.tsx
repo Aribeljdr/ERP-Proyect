@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -40,14 +41,11 @@ export function InvoiceModal({ open, onClose, onSave, item }: InvoiceModalProps)
     setSaving(true)
     const payload = { ...form, total: parseFloat(form.total) }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/invoices/${item.id}`
-        : 'http://localhost:4000/api/v1/invoices'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.invoicing.update(item.id, payload)
+      } else {
+        await api.invoicing.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -67,7 +65,7 @@ export function InvoiceModal({ open, onClose, onSave, item }: InvoiceModalProps)
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>N° Factura</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>NÂ° Factura</label>
               <input value={form.invoiceNumber} onChange={e => set('invoiceNumber', e.target.value)} required
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
@@ -89,7 +87,7 @@ export function InvoiceModal({ open, onClose, onSave, item }: InvoiceModalProps)
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Emisión</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>EmisiÃ³n</label>
               <input type="date" value={form.issuedAt} onChange={e => set('issuedAt', e.target.value)}
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
@@ -111,7 +109,7 @@ export function InvoiceModal({ open, onClose, onSave, item }: InvoiceModalProps)
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear factura'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear factura'}
             </button>
           </div>
         </form>

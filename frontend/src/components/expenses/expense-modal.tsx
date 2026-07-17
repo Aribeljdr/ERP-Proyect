@@ -1,9 +1,10 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 
-const CATEGORIES = ['Tecnología', 'Oficina', 'Marketing', 'Servicios', 'Inmuebles', 'Capacitación']
+const CATEGORIES = ['TecnologÃ­a', 'Oficina', 'Marketing', 'Servicios', 'Inmuebles', 'CapacitaciÃ³n']
 const PAYMENT_METHODS = ['cash', 'card', 'transfer']
 const STATUSES = ['paid', 'pending', 'cancelled']
 
@@ -41,14 +42,11 @@ export function ExpenseModal({ open, onClose, onSave, expense }: ExpenseModalPro
     setSaving(true)
     const payload = { ...form, amount: parseFloat(form.amount) }
     try {
-      const url = expense
-        ? `http://localhost:4000/api/v1/expenses/${expense.id}`
-        : 'http://localhost:4000/api/v1/expenses'
-      await fetch(url, {
-        method: expense ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (expense) {
+        await api.expenses.update(expense.id, payload)
+      } else {
+        await api.expenses.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -67,7 +65,7 @@ export function ExpenseModal({ open, onClose, onSave, expense }: ExpenseModalPro
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Descripción</label>
+            <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>DescripciÃ³n</label>
             <input value={form.description} onChange={e => set('description', e.target.value)} required
               className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
           </div>
@@ -84,7 +82,7 @@ export function ExpenseModal({ open, onClose, onSave, expense }: ExpenseModalPro
             </div>
           </div>
           <div>
-            <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Categoría</label>
+            <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>CategorÃ­a</label>
             <select value={form.category} onChange={e => set('category', e.target.value)} required
               className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}>
               <option value="">Seleccionar</option>
@@ -93,7 +91,7 @@ export function ExpenseModal({ open, onClose, onSave, expense }: ExpenseModalPro
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Método de pago</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>MÃ©todo de pago</label>
               <select value={form.paymentMethod} onChange={e => set('paymentMethod', e.target.value)}
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}>
                 {PAYMENT_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
@@ -112,7 +110,7 @@ export function ExpenseModal({ open, onClose, onSave, expense }: ExpenseModalPro
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : expense ? 'Actualizar' : 'Crear gasto'}
+              {saving ? 'Guardandoâ€¦' : expense ? 'Actualizar' : 'Crear gasto'}
             </button>
           </div>
         </form>

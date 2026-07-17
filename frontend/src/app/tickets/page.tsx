@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { TicketsTable } from '@/components/tickets/tickets-table'
@@ -16,7 +17,7 @@ export default function TicketsPage() {
   const handleDelete = (e: any) => setDeleteItem(e)
   const confirmDelete = async () => {
     if (!deleteItem) return
-    await fetch(`http://localhost:4000/api/v1/tickets/${deleteItem.id}`, { method: 'DELETE' })
+    await api.tickets.delete(deleteItem.id)
     setDeleteItem(null)
     setRefreshKey(k => k + 1)
   }
@@ -38,7 +39,7 @@ export default function TicketsPage() {
       <ConfirmDialog
         open={!!deleteItem}
         title="Eliminar ticket"
-        message={`¿Eliminar el ticket "${deleteItem?.title}"? Esta acción no se puede deshacer.`}
+        message={`Ãƒâ€šÃ‚Â¿Eliminar el ticket "${deleteItem?.title}"? Esta acciÃƒÆ’Ã‚Â³n no se puede deshacer.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteItem(null)}
       />

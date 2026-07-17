@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { PurchasesTable } from '@/components/purchases/purchases-table'
@@ -16,7 +17,7 @@ export default function PurchasesPage() {
   const handleDelete = (e: any) => setDeleteItem(e)
   const confirmDelete = async () => {
     if (!deleteItem) return
-    await fetch(`http://localhost:4000/api/v1/purchases/${deleteItem.id}`, { method: 'DELETE' })
+    await api.purchases.delete(deleteItem.id)
     setDeleteItem(null)
     setRefreshKey(k => k + 1)
   }
@@ -38,7 +39,7 @@ export default function PurchasesPage() {
       <ConfirmDialog
         open={!!deleteItem}
         title="Eliminar orden"
-        message={`¿Eliminar la orden "${deleteItem?.orderNumber}"? Esta acción no se puede deshacer.`}
+        message={`Ãƒâ€šÃ‚Â¿Eliminar la orden "${deleteItem?.orderNumber}"? Esta acciÃƒÆ’Ã‚Â³n no se puede deshacer.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteItem(null)}
       />

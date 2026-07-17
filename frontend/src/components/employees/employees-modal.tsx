@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -41,14 +42,11 @@ export function EmployeesModal({ open, onClose, onSave, item }: EmployeesModalPr
     setSaving(true)
     const payload = { ...form, salary: parseFloat(form.salary) || 0 }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/employees/${item.id}`
-        : 'http://localhost:4000/api/v1/employees'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.employees.update(item.id, payload)
+      } else {
+        await api.employees.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -102,7 +100,7 @@ export function EmployeesModal({ open, onClose, onSave, item }: EmployeesModalPr
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Fecha contratación</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Fecha contrataciÃ³n</label>
               <input type="date" value={form.hireDate} onChange={e => set('hireDate', e.target.value)}
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
@@ -119,7 +117,7 @@ export function EmployeesModal({ open, onClose, onSave, item }: EmployeesModalPr
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear empleado'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear empleado'}
             </button>
           </div>
         </form>

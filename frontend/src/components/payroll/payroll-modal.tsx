@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -39,14 +40,11 @@ export function PayrollModal({ open, onClose, onSave, item }: PayrollModalProps)
     setSaving(true)
     const payload = { ...form, grossSalary: parseFloat(form.grossSalary), deductions: parseFloat(form.deductions) || 0, netPay: parseFloat(form.netPay) || 0 }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/payroll/${item.id}`
-        : 'http://localhost:4000/api/v1/payroll'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.payroll.update(item.id, payload)
+      } else {
+        await api.payroll.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -60,7 +58,7 @@ export function PayrollModal({ open, onClose, onSave, item }: PayrollModalProps)
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,.35)', backdropFilter: 'blur(2px)' }}>
       <div className="w-full max-w-md rounded-2xl p-0 overflow-hidden" style={{ background: 'var(--card,#fff)', border: '1px solid var(--border,#E2E8F0)', boxShadow: '0 25px 60px rgba(0,0,0,.15)' }}>
         <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: 'var(--border,#E8EDF3)' }}>
-          <div className="text-[16px] font-bold" style={{ color: 'var(--text)' }}>{item ? 'Editar nómina' : 'Nuevo registro'}</div>
+          <div className="text-[16px] font-bold" style={{ color: 'var(--text)' }}>{item ? 'Editar nÃ³mina' : 'Nuevo registro'}</div>
           <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-hover transition-all"><X className="w-4 h-4" style={{ color: 'var(--muted)' }} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -105,7 +103,7 @@ export function PayrollModal({ open, onClose, onSave, item }: PayrollModalProps)
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear registro'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear registro'}
             </button>
           </div>
         </form>

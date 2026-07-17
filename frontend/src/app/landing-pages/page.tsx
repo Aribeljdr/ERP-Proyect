@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { LandingPagesTable } from '@/components/landing-pages/landing-pages-table'
@@ -16,7 +17,7 @@ export default function LandingPagesPage() {
   const handleDelete = (e: any) => setDeleteItem(e)
   const confirmDelete = async () => {
     if (!deleteItem) return
-    await fetch(`http://localhost:4000/api/v1/landing-pages/${deleteItem.id}`, { method: 'DELETE' })
+    await api.landingPages.delete(deleteItem.id)
     setDeleteItem(null)
     setRefreshKey(k => k + 1)
   }
@@ -30,15 +31,15 @@ export default function LandingPagesPage() {
         <div className="text-[20px] font-bold tracking-tight" style={{ color: 'var(--text)' }}>Landing Pages</div>
         <div className="flex gap-2.5">
           <button className="btn-ghost h-10"><Filter className="w-[15px] h-[15px]" />Filtros</button>
-          <button className="btn-primary h-10" onClick={handleNew}><Plus className="w-4 h-4" strokeWidth={2.2} />Nueva página</button>
+          <button className="btn-primary h-10" onClick={handleNew}><Plus className="w-4 h-4" strokeWidth={2.2} />Nueva pÃƒÆ’Ã‚Â¡gina</button>
         </div>
       </div>
       <LandingPagesTable key={refreshKey} onEdit={handleEdit} onDelete={handleDelete} />
       <LandingPagesModal open={modalOpen} onClose={handleClose} onSave={handleSave} item={editItem} />
       <ConfirmDialog
         open={!!deleteItem}
-        title="Eliminar página"
-        message={`¿Eliminar la página "${deleteItem?.title}"? Esta acción no se puede deshacer.`}
+        title="Eliminar pÃƒÆ’Ã‚Â¡gina"
+        message={`Ãƒâ€šÃ‚Â¿Eliminar la pÃƒÆ’Ã‚Â¡gina "${deleteItem?.title}"? Esta acciÃƒÆ’Ã‚Â³n no se puede deshacer.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteItem(null)}
       />

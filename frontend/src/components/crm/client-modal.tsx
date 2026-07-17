@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -34,8 +35,11 @@ export function ClientModal({ open, onClose, onSave, client }: ClientModalProps)
       const initials = form.name.split(' ').map((s: string) => s[0]).join('').slice(0, 2).toUpperCase()
       const colors = ['#2563EB', '#22C55E', '#F59E0B', '#EF4444', '#8B5CF6', '#0EA5E9', '#14B8A6']
       const payload = { ...form, value: parseFloat(form.value) || 0, initials, avColor: colors[Math.floor(Math.random() * colors.length)], progress: 0 }
-      const url = client ? `http://localhost:4000/api/v1/crm/${client.id}` : 'http://localhost:4000/api/v1/crm'
-      await fetch(url, { method: client ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      if (client) {
+        await api.crm.update(client.id, payload)
+      } else {
+        await api.crm.create(payload)
+      }
       onSave(); onClose()
     } finally { setSaving(false) }
   }
@@ -56,7 +60,7 @@ export function ClientModal({ open, onClose, onSave, client }: ClientModalProps)
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Email</label><input type="email" value={form.email} onChange={e => set('email', e.target.value)} className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} /></div>
-            <div><label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Teléfono</label><input value={form.phone} onChange={e => set('phone', e.target.value)} className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} /></div>
+            <div><label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>TelÃ©fono</label><input value={form.phone} onChange={e => set('phone', e.target.value)} className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} /></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Estado</label><select value={form.status} onChange={e => set('status', e.target.value)} className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}>{STATUSES.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
@@ -64,11 +68,11 @@ export function ClientModal({ open, onClose, onSave, client }: ClientModalProps)
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Responsable</label><input value={form.owner} onChange={e => set('owner', e.target.value)} placeholder="AL" className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} /></div>
-            <div><label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Nombre resp.</label><input value={form.ownerName} onChange={e => set('ownerName', e.target.value)} placeholder="A. López" className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} /></div>
+            <div><label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Nombre resp.</label><input value={form.ownerName} onChange={e => set('ownerName', e.target.value)} placeholder="A. LÃ³pez" className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} /></div>
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>{saving ? 'Guardando…' : client ? 'Actualizar' : 'Crear cliente'}</button>
+            <button type="submit" disabled={saving} className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>{saving ? 'Guardandoâ€¦' : client ? 'Actualizar' : 'Crear cliente'}</button>
           </div>
         </form>
       </div>

@@ -24,7 +24,7 @@ export function SalesTable({ onEdit, onDelete }: { onEdit: (e: any) => void; onD
     const res = await api.sales.list({ page, limit: 10 })
     setOrders(res.data)
     setTotal(res.total)
-    const sum = await fetch('http://localhost:4000/api/v1/sales/summary').then(r => r.json())
+    const sum = await api.sales.summary()
     setSummary(sum)
     const elapsed = Date.now() - start
     if (elapsed < 1000) await new Promise(r => setTimeout(r, 1000 - elapsed))
@@ -41,7 +41,7 @@ export function SalesTable({ onEdit, onDelete }: { onEdit: (e: any) => void; onD
         <SummarySkeleton />
       ) : summary && (
         <div className="grid grid-cols-4 gap-4 p-5 border-b" style={{ borderColor: 'var(--border)' }}>
-          <div><div className="text-[13px] font-medium" style={{ color: 'var(--muted)' }}>Órdenes totales</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.totalOrders}</div></div>
+          <div><div className="text-[13px] font-medium" style={{ color: 'var(--muted)' }}>Ã“rdenes totales</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.totalOrders}</div></div>
           <div><div className="text-[13px] font-medium" style={{ color: 'var(--muted)' }}>Pendientes</div><div className="text-[24px] font-bold text-amber-500">{summary.pendingOrders}</div></div>
           <div><div className="text-[13px] font-medium" style={{ color: 'var(--muted)' }}>Completadas</div><div className="text-[24px] font-bold text-green-500">{summary.completedOrders}</div></div>
           <div><div className="text-[13px] font-medium" style={{ color: 'var(--muted)' }}>Ingresos</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>${summary.totalRevenue.toLocaleString()}</div></div>
@@ -84,7 +84,7 @@ export function SalesTable({ onEdit, onDelete }: { onEdit: (e: any) => void; onD
         </table>
       </div>
       <div className="flex items-center justify-between px-5 py-3.5" style={{ borderTop: '1px solid var(--border)' }}>
-        <span className="text-[12.5px] text-muted">Mostrando <b style={{ color: 'var(--text)' }}>{orders.length}</b> de {total} órdenes</span>
+        <span className="text-[12.5px] text-muted">Mostrando <b style={{ color: 'var(--text)' }}>{orders.length}</b> de {total} Ã³rdenes</span>
         <div className="flex gap-1.5 items-center">
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
             className="w-8 h-8 border rounded-lg flex items-center justify-center disabled:opacity-40" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>

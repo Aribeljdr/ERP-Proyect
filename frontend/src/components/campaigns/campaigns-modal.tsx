@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -41,14 +42,11 @@ export function CampaignsModal({ open, onClose, onSave, item }: CampaignsModalPr
     setSaving(true)
     const payload = { ...form, sentCount: parseInt(form.sentCount) || 0, openRate: parseFloat(form.openRate) || 0, clickRate: parseFloat(form.clickRate) || 0, budget: parseFloat(form.budget) || 0 }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/campaigns/${item.id}`
-        : 'http://localhost:4000/api/v1/campaigns'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.campaigns.update(item.id, payload)
+      } else {
+        await api.campaigns.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -62,7 +60,7 @@ export function CampaignsModal({ open, onClose, onSave, item }: CampaignsModalPr
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,.35)', backdropFilter: 'blur(2px)' }}>
       <div className="w-full max-w-md rounded-2xl p-0 overflow-hidden" style={{ background: 'var(--card,#fff)', border: '1px solid var(--border,#E2E8F0)', boxShadow: '0 25px 60px rgba(0,0,0,.15)' }}>
         <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: 'var(--border,#E8EDF3)' }}>
-          <div className="text-[16px] font-bold" style={{ color: 'var(--text)' }}>{item ? 'Editar campaña' : 'Nueva campaña'}</div>
+          <div className="text-[16px] font-bold" style={{ color: 'var(--text)' }}>{item ? 'Editar campaÃ±a' : 'Nueva campaÃ±a'}</div>
           <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-hover transition-all"><X className="w-4 h-4" style={{ color: 'var(--muted)' }} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -114,7 +112,7 @@ export function CampaignsModal({ open, onClose, onSave, item }: CampaignsModalPr
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear campaña'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear campaÃ±a'}
             </button>
           </div>
         </form>

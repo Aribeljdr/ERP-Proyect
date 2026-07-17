@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2, FileIcon } from 'lucide-react'
@@ -15,8 +16,8 @@ export function DocsTable({ onEdit, onDelete }: { onEdit: (d: any) => void; onDe
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/documents?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/documents/summary').then(r => r.json()),
+      api.documents.list({ page, limit: 10 }),
+      api.documents.summary(),
     ])
     setDocs(res.data); setTotal(res.total); setSummary(sum)
     const elapsed = Date.now() - start
@@ -46,8 +47,8 @@ export function DocsTable({ onEdit, onDelete }: { onEdit: (d: any) => void; onDe
           <thead><tr style={{ background: 'var(--bg,#F8FAFC)' }}>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Nombre</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Tipo</th>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Categoría</th>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Tamaño</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">CategorÃ­a</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">TamaÃ±o</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Subido por</th>
             <th className="text-right px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Acciones</th>
           </tr></thead>

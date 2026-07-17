@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -38,14 +39,11 @@ export function PurchasesModal({ open, onClose, onSave, item }: PurchasesModalPr
     setSaving(true)
     const payload = { ...form, total: parseFloat(form.total), itemsCount: parseInt(form.itemsCount) || 0 }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/purchases/${item.id}`
-        : 'http://localhost:4000/api/v1/purchases'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.purchases.update(item.id, payload)
+      } else {
+        await api.purchases.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -65,7 +63,7 @@ export function PurchasesModal({ open, onClose, onSave, item }: PurchasesModalPr
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>N° Orden</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>NÂ° Orden</label>
               <input value={form.orderNumber} onChange={e => set('orderNumber', e.target.value)} required
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
@@ -99,7 +97,7 @@ export function PurchasesModal({ open, onClose, onSave, item }: PurchasesModalPr
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear orden'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear orden'}
             </button>
           </div>
         </form>

@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -21,8 +22,8 @@ export function EmployeesTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/employees?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/employees/summary').then(r => r.json()),
+      api.employees.list({ page, limit: 10 }),
+      api.employees.summary(),
     ])
     setEmployees(res.data)
     setTotal(res.total)
@@ -45,7 +46,7 @@ export function EmployeesTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
           <div><div className="text-[13px] font-medium text-muted">Total empleados</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.total}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Activos</div><div className="text-[24px] font-bold text-green-500">{summary.activeEmployees}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Ausentes</div><div className="text-[24px] font-bold text-amber-500">{summary.onLeave}</div></div>
-          <div><div className="text-[13px] font-medium text-muted">Nómina total</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>${summary.payrollTotal.toLocaleString()}</div></div>
+          <div><div className="text-[13px] font-medium text-muted">NÃ³mina total</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>${summary.payrollTotal.toLocaleString()}</div></div>
         </div>
       )}
       <div className="overflow-x-auto">

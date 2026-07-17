@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -21,8 +22,8 @@ export function PayrollTable({ onEdit, onDelete }: { onEdit: (e: any) => void; o
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/payroll?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/payroll/summary').then(r => r.json()),
+      api.payroll.list({ page, limit: 10 }),
+      api.payroll.summary(),
     ])
     setRecords(res.data)
     setTotal(res.total)

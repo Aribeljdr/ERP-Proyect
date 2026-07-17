@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -22,8 +23,8 @@ export function CampaignsTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/campaigns?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/campaigns/summary').then(r => r.json()),
+      api.campaigns.list({ page, limit: 10 }),
+      api.campaigns.summary(),
     ])
     setCampaigns(res.data)
     setTotal(res.total)
@@ -43,7 +44,7 @@ export function CampaignsTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
         <SummarySkeleton />
       ) : summary && (
         <div className="grid grid-cols-4 gap-4 p-5 border-b" style={{ borderColor: 'var(--border)' }}>
-          <div><div className="text-[13px] font-medium text-muted">Total campañas</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.total}</div></div>
+          <div><div className="text-[13px] font-medium text-muted">Total campaÃ±as</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.total}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Activas</div><div className="text-[24px] font-bold text-green-500">{summary.activeCampaigns}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Borradores</div><div className="text-[24px] font-bold" style={{ color: '#94A3B8' }}>{summary.draftCampaigns}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Enviados totales</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.totalSent.toLocaleString()}</div></div>
@@ -52,7 +53,7 @@ export function CampaignsTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
       <div className="overflow-x-auto">
         <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '820px' }}>
           <thead><tr style={{ background: 'var(--bg,#F8FAFC)' }}>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Campaña</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">CampaÃ±a</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Tipo</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Estado</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Enviados</th>
@@ -88,7 +89,7 @@ export function CampaignsTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
         </table>
       </div>
       <div className="flex items-center justify-between px-5 py-3.5" style={{ borderTop: '1px solid var(--border)' }}>
-        <span className="text-[12.5px] text-muted">Mostrando <b style={{ color: 'var(--text)' }}>{campaigns.length}</b> de {total} campañas</span>
+        <span className="text-[12.5px] text-muted">Mostrando <b style={{ color: 'var(--text)' }}>{campaigns.length}</b> de {total} campaÃ±as</span>
         <div className="flex gap-1.5 items-center">
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
             className="w-8 h-8 border rounded-lg flex items-center justify-center disabled:opacity-40" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>

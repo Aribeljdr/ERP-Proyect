@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -21,8 +22,8 @@ export function PurchasesTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/purchases?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/purchases/summary').then(r => r.json()),
+      api.purchases.list({ page, limit: 10 }),
+      api.purchases.summary(),
     ])
     setOrders(res.data)
     setTotal(res.total)
@@ -42,7 +43,7 @@ export function PurchasesTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
         <SummarySkeleton />
       ) : summary && (
         <div className="grid grid-cols-4 gap-4 p-5 border-b" style={{ borderColor: 'var(--border)' }}>
-          <div><div className="text-[13px] font-medium text-muted">Órdenes totales</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.totalOrders}</div></div>
+          <div><div className="text-[13px] font-medium text-muted">Ã“rdenes totales</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.totalOrders}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Pendientes</div><div className="text-[24px] font-bold text-amber-500">{summary.pendingOrders}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Recibidas</div><div className="text-[24px] font-bold text-green-500">{summary.receivedOrders}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Total gastado</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>${summary.totalSpent.toLocaleString()}</div></div>
@@ -83,7 +84,7 @@ export function PurchasesTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
         </table>
       </div>
       <div className="flex items-center justify-between px-5 py-3.5" style={{ borderTop: '1px solid var(--border)' }}>
-        <span className="text-[12.5px] text-muted">Mostrando <b style={{ color: 'var(--text)' }}>{orders.length}</b> de {total} órdenes</span>
+        <span className="text-[12.5px] text-muted">Mostrando <b style={{ color: 'var(--text)' }}>{orders.length}</b> de {total} Ã³rdenes</span>
         <div className="flex gap-1.5 items-center">
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
             className="w-8 h-8 border rounded-lg flex items-center justify-center disabled:opacity-40" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>

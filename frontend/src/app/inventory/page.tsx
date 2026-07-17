@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { InventoryTable } from '@/components/inventory/inventory-table'
@@ -16,7 +17,7 @@ export default function InventoryPage() {
   const handleDelete = (e: any) => setDeleteItem(e)
   const confirmDelete = async () => {
     if (!deleteItem) return
-    await fetch(`http://localhost:4000/api/v1/inventory/${deleteItem.id}`, { method: 'DELETE' })
+    await api.inventory.delete(deleteItem.id)
     setDeleteItem(null)
     setRefreshKey(k => k + 1)
   }
@@ -38,7 +39,7 @@ export default function InventoryPage() {
       <ConfirmDialog
         open={!!deleteItem}
         title="Eliminar producto"
-        message={`¿Eliminar "${deleteItem?.name}"? Esta acción no se puede deshacer.`}
+        message={`Ãƒâ€šÃ‚Â¿Eliminar "${deleteItem?.name}"? Esta acciÃƒÆ’Ã‚Â³n no se puede deshacer.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteItem(null)}
       />

@@ -25,7 +25,7 @@ export function InvoiceTable({ onEdit, onDelete }: { onEdit: (e: any) => void; o
     const res = await api.invoicing.list({ page, limit: 10 })
     setInvoices(res.data)
     setTotal(res.total)
-    const sum = await fetch('http://localhost:4000/api/v1/invoices/summary').then(r => r.json())
+    const sum = await api.invoicing.summary()
     setSummary(sum)
     const elapsed = Date.now() - start
     if (elapsed < 1000) await new Promise(r => setTimeout(r, 1000 - elapsed))
@@ -53,7 +53,7 @@ export function InvoiceTable({ onEdit, onDelete }: { onEdit: (e: any) => void; o
           <thead><tr style={{ background: 'var(--bg,#F8FAFC)' }}>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Factura</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Cliente</th>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Emisión</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">EmisiÃ³n</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Vencimiento</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Total</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Estado</th>

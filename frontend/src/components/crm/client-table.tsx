@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -18,7 +19,7 @@ export function ClientTable({ onEdit, onDelete }: { onEdit: (c: any) => void; on
     const params = new URLSearchParams({ page: String(page), limit: '8' })
     if (tab !== 'all') params.set('status', tab)
     const [res] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/crm?${params}`).then(r => r.json()),
+      api.crm.list({ page, limit: 8 }),
     ])
     setClients(res.data); setTotal(res.total)
     const elapsed = Date.now() - start
@@ -76,8 +77,8 @@ export function ClientTable({ onEdit, onDelete }: { onEdit: (c: any) => void; on
                       </span>
                     </td>
                     <td className="px-4 py-3.5 text-[13.5px] font-semibold" style={{ color: 'var(--text)' }}>${Number(r.value).toLocaleString()}</td>
-                    <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--text)' }}>{r.email || '—'}</td>
-                    <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--text)' }}>{r.ownerName || r.owner || '—'}</td>
+                    <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--text)' }}>{r.email || 'â€”'}</td>
+                    <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--text)' }}>{r.ownerName || r.owner || 'â€”'}</td>
                     <td className="px-4 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button onClick={() => onEdit(r)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover"><Pencil className="w-3.5 h-3.5" style={{ color: 'var(--muted)' }} /></button>

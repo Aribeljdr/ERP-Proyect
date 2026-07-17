@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -15,8 +16,8 @@ export function InventoryTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/inventory?page=${page}&limit=20`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/inventory/summary').then(r => r.json()),
+      api.inventory.list({ page, limit: 20 }),
+      api.inventory.summary(),
     ])
     setProducts(res.data)
     setTotal(res.total)
@@ -44,11 +45,11 @@ export function InventoryTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
       <div className="overflow-x-auto">
         <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '900px' }}>
           <thead><tr style={{ background: 'var(--bg,#F8FAFC)' }}>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Código</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">CÃ³digo</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Producto</th>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Categoría</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">CategorÃ­a</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Stock</th>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Stock Mín.</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Stock MÃ­n.</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Precio</th>
             <th className="text-right px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Acciones</th>
           </tr></thead>
@@ -62,7 +63,7 @@ export function InventoryTable({ onEdit, onDelete }: { onEdit: (e: any) => void;
                   <td className="px-4 py-3.5 text-[13px] font-mono font-semibold" style={{ color: 'var(--text)' }}>{p.code}</td>
                   <td className="px-4 py-3.5 text-[13.5px] font-semibold" style={{ color: 'var(--text)' }}>{p.name}</td>
                   <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--muted)' }}>{p.category}</td>
-                  <td className="px-4 py-3.5"><span className="text-[13.5px] font-semibold" style={{ color: lowStock ? '#EF4444' : 'var(--text)' }}>{p.stock} {lowStock && '⚠️'}</span></td>
+                  <td className="px-4 py-3.5"><span className="text-[13.5px] font-semibold" style={{ color: lowStock ? '#EF4444' : 'var(--text)' }}>{p.stock} {lowStock && 'âš ï¸'}</span></td>
                   <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--muted)' }}>{p.minStock}</td>
                   <td className="px-4 py-3.5 text-[13.5px] font-semibold" style={{ color: 'var(--text)' }}>${Number(p.price).toLocaleString()}</td>
                   <td className="px-4 py-3.5 text-right">

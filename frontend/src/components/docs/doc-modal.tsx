@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -29,8 +30,11 @@ export function DocModal({ open, onClose, onSave, item }: DocModalProps) {
     if (!form.name || !form.category) return
     setSaving(true)
     try {
-      const url = item ? `http://localhost:4000/api/v1/documents/${item.id}` : 'http://localhost:4000/api/v1/documents'
-      await fetch(url, { method: item ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+      if (item) {
+        await api.documents.update(item.id, form)
+      } else {
+        await api.documents.create(form)
+      }
       onSave(); onClose()
     } finally { setSaving(false) }
   }

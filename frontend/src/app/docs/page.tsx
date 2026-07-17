@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { DocsTable } from '@/components/docs/docs-table'
@@ -16,7 +17,7 @@ export default function DocsPage() {
   const handleDelete = (d: any) => setDeleteItem(d)
   const confirmDelete = async () => {
     if (!deleteItem) return
-    await fetch(`http://localhost:4000/api/v1/documents/${deleteItem.id}`, { method: 'DELETE' })
+    await api.documents.delete(deleteItem.id)
     setDeleteItem(null); setRefreshKey(k => k + 1)
   }
   const handleSave = () => setRefreshKey(k => k + 1)
@@ -34,7 +35,7 @@ export default function DocsPage() {
       </div>
       <DocsTable key={refreshKey} onEdit={handleEdit} onDelete={handleDelete} />
       <DocModal open={modalOpen} onClose={handleClose} onSave={handleSave} item={editItem} />
-      <ConfirmDialog open={!!deleteItem} title="Eliminar documento" message={`¿Eliminar "${deleteItem?.name}"?`} onConfirm={confirmDelete} onCancel={() => setDeleteItem(null)} />
+      <ConfirmDialog open={!!deleteItem} title="Eliminar documento" message={`Ãƒâ€šÃ‚Â¿Eliminar "${deleteItem?.name}"?`} onConfirm={confirmDelete} onCancel={() => setDeleteItem(null)} />
     </div>
   )
 }

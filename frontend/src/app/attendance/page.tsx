@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { AttendanceTable } from '@/components/attendance/attendance-table'
@@ -16,7 +17,7 @@ export default function AttendancePage() {
   const handleDelete = (e: any) => setDeleteItem(e)
   const confirmDelete = async () => {
     if (!deleteItem) return
-    await fetch(`http://localhost:4000/api/v1/attendance/${deleteItem.id}`, { method: 'DELETE' })
+    await api.attendance.delete(deleteItem.id)
     setDeleteItem(null)
     setRefreshKey(k => k + 1)
   }
@@ -38,7 +39,7 @@ export default function AttendancePage() {
       <ConfirmDialog
         open={!!deleteItem}
         title="Eliminar registro"
-        message={`¿Eliminar el registro de "${deleteItem?.employeeName}"? Esta acción no se puede deshacer.`}
+        message={`Ãƒâ€šÃ‚Â¿Eliminar el registro de "${deleteItem?.employeeName}"? Esta acciÃƒÆ’Ã‚Â³n no se puede deshacer.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteItem(null)}
       />

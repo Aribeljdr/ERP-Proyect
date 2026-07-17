@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -38,14 +39,11 @@ export function AttendanceModal({ open, onClose, onSave, item }: AttendanceModal
     setSaving(true)
     const payload = { ...form }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/attendance/${item.id}`
-        : 'http://localhost:4000/api/v1/attendance'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.attendance.update(item.id, payload)
+      } else {
+        await api.attendance.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -99,7 +97,7 @@ export function AttendanceModal({ open, onClose, onSave, item }: AttendanceModal
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear registro'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear registro'}
             </button>
           </div>
         </form>

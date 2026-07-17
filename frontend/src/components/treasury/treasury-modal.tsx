@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -41,14 +42,11 @@ export function TreasuryModal({ open, onClose, onSave, item }: TreasuryModalProp
     setSaving(true)
     const payload = { ...form, amount: parseFloat(form.amount) }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/treasury/${item.id}`
-        : 'http://localhost:4000/api/v1/treasury'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.treasury.update(item.id, payload)
+      } else {
+        await api.treasury.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -87,7 +85,7 @@ export function TreasuryModal({ open, onClose, onSave, item }: TreasuryModalProp
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Categoría</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>CategorÃ­a</label>
               <select value={form.category} onChange={e => set('category', e.target.value)}
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}>
                 <option value="">Seleccionar</option>
@@ -112,7 +110,7 @@ export function TreasuryModal({ open, onClose, onSave, item }: TreasuryModalProp
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear movimiento'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear movimiento'}
             </button>
           </div>
         </form>

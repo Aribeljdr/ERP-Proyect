@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -37,14 +38,11 @@ export function InventoryModal({ open, onClose, onSave, item }: InventoryModalPr
     setSaving(true)
     const payload = { ...form, stock: parseInt(form.stock) || 0, minStock: parseInt(form.minStock) || 0, price: parseFloat(form.price) }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/inventory/${item.id}`
-        : 'http://localhost:4000/api/v1/inventory'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.inventory.update(item.id, payload)
+      } else {
+        await api.inventory.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -64,12 +62,12 @@ export function InventoryModal({ open, onClose, onSave, item }: InventoryModalPr
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Código</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>CÃ³digo</label>
               <input value={form.code} onChange={e => set('code', e.target.value)} required
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Categoría</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>CategorÃ­a</label>
               <input value={form.category} onChange={e => set('category', e.target.value)}
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
@@ -86,7 +84,7 @@ export function InventoryModal({ open, onClose, onSave, item }: InventoryModalPr
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
             <div>
-              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Stock Mín.</label>
+              <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Stock MÃ­n.</label>
               <input type="number" value={form.minStock} onChange={e => set('minStock', e.target.value)}
                 className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
             </div>
@@ -101,7 +99,7 @@ export function InventoryModal({ open, onClose, onSave, item }: InventoryModalPr
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear producto'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear producto'}
             </button>
           </div>
         </form>

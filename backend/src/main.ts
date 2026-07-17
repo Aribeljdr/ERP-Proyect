@@ -7,8 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api/v1');
+  const allowedOrigins = ['http://localhost:3000'];
+  if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+  }
+
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: allowedOrigins,
     credentials: true,
   });
 
@@ -20,7 +25,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(4000);
-  console.log('Orbit ERP Backend running on http://localhost:4000');
+  const port = process.env.PORT || 4000;
+  await app.listen(port);
+  console.log(`Orbit ERP Backend running on http://localhost:${port}`);
 }
 bootstrap();

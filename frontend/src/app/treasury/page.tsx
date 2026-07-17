@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { TreasuryTable } from '@/components/treasury/treasury-table'
@@ -16,7 +17,7 @@ export default function TreasuryPage() {
   const handleDelete = (e: any) => setDeleteItem(e)
   const confirmDelete = async () => {
     if (!deleteItem) return
-    await fetch(`http://localhost:4000/api/v1/treasury/${deleteItem.id}`, { method: 'DELETE' })
+    await api.treasury.delete(deleteItem.id)
     setDeleteItem(null)
     setRefreshKey(k => k + 1)
   }
@@ -27,7 +28,7 @@ export default function TreasuryPage() {
   return (
     <div style={{ maxWidth: '1360px', margin: '0 auto', animation: 'fadeIn .3s ease' }}>
       <div className="flex items-center justify-between mb-[18px] flex-wrap gap-3">
-        <div className="text-[20px] font-bold tracking-tight" style={{ color: 'var(--text)' }}>Tesorería</div>
+        <div className="text-[20px] font-bold tracking-tight" style={{ color: 'var(--text)' }}>TesorerÃƒÆ’Ã‚Â­a</div>
         <div className="flex gap-2.5">
           <button className="btn-ghost h-10"><Filter className="w-[15px] h-[15px]" />Filtros</button>
           <button className="btn-primary h-10" onClick={handleNew}><Plus className="w-4 h-4" strokeWidth={2.2} />Nuevo movimiento</button>
@@ -38,7 +39,7 @@ export default function TreasuryPage() {
       <ConfirmDialog
         open={!!deleteItem}
         title="Eliminar movimiento"
-        message={`¿Eliminar "${deleteItem?.concept}"? Esta acción no se puede deshacer.`}
+        message={`Ãƒâ€šÃ‚Â¿Eliminar "${deleteItem?.concept}"? Esta acciÃƒÆ’Ã‚Â³n no se puede deshacer.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteItem(null)}
       />

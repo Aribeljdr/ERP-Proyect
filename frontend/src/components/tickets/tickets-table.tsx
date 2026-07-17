@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -28,8 +29,8 @@ export function TicketsTable({ onEdit, onDelete }: { onEdit: (e: any) => void; o
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/tickets?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/tickets/summary').then(r => r.json()),
+      api.tickets.list({ page, limit: 10 }),
+      api.tickets.summary(),
     ])
     setTickets(res.data)
     setTotal(res.total)

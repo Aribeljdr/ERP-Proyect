@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -21,8 +22,8 @@ export function EmailTemplatesTable({ onEdit, onDelete }: { onEdit: (e: any) => 
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/email-templates?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/email-templates/summary').then(r => r.json()),
+      api.emailTemplates.list({ page, limit: 10 }),
+      api.emailTemplates.summary(),
     ])
     setTemplates(res.data)
     setTotal(res.total)
@@ -52,7 +53,7 @@ export function EmailTemplatesTable({ onEdit, onDelete }: { onEdit: (e: any) => 
           <thead><tr style={{ background: 'var(--bg,#F8FAFC)' }}>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Plantilla</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Asunto</th>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Categoría</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">CategorÃ­a</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Estado</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Aperturas</th>
             <th className="text-right px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Acciones</th>

@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState } from 'react'
 import { ClientTable } from '@/components/crm/client-table'
@@ -16,7 +17,7 @@ export default function CrmPage() {
   const handleDelete = (c: any) => setDeleteClient(c)
   const confirmDelete = async () => {
     if (!deleteClient) return
-    await fetch(`http://localhost:4000/api/v1/crm/${deleteClient.id}`, { method: 'DELETE' })
+    await api.crm.delete(deleteClient.id)
     setDeleteClient(null); setRefreshKey(k => k + 1)
   }
   const handleSave = () => setRefreshKey(k => k + 1)
@@ -29,7 +30,7 @@ export default function CrmPage() {
         <div className="flex gap-2.5 ml-auto">
           <div className="h-10 flex items-center gap-2 px-3 rounded-[10px] border" style={{ background: 'var(--card,#fff)', borderColor: 'var(--border,#E2E8F0)' }}>
             <Search className="w-[15px] h-[15px] text-muted" />
-            <input placeholder="Buscar cliente…" className="input-orbit" style={{ width: '150px' }} />
+            <input placeholder="Buscar clienteÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦" className="input-orbit" style={{ width: '150px' }} />
           </div>
           <button className="btn-ghost h-10"><Filter className="w-[15px] h-[15px]" />Filtros</button>
           <button className="btn-primary h-10" onClick={handleNew}><Plus className="w-4 h-4" strokeWidth={2.2} />Nuevo cliente</button>
@@ -37,7 +38,7 @@ export default function CrmPage() {
       </div>
       <ClientTable key={refreshKey} onEdit={handleEdit} onDelete={handleDelete} />
       <ClientModal open={modalOpen} onClose={handleClose} onSave={handleSave} client={editClient} />
-      <ConfirmDialog open={!!deleteClient} title="Eliminar cliente" message={`¿Eliminar a "${deleteClient?.name}"?`} onConfirm={confirmDelete} onCancel={() => setDeleteClient(null)} />
+      <ConfirmDialog open={!!deleteClient} title="Eliminar cliente" message={`Ãƒâ€šÃ‚Â¿Eliminar a "${deleteClient?.name}"?`} onConfirm={confirmDelete} onCancel={() => setDeleteClient(null)} />
     </div>
   )
 }

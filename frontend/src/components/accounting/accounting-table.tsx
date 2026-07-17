@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -15,8 +16,8 @@ export function AccountingTable({ onEdit, onDelete }: { onEdit: (e: any) => void
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/accounting?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/accounting/summary').then(r => r.json()),
+      api.accounting.list({ page, limit: 10 }),
+      api.accounting.summary(),
     ])
     setEntries(res.data)
     setTotal(res.total)
@@ -44,7 +45,7 @@ export function AccountingTable({ onEdit, onDelete }: { onEdit: (e: any) => void
       <div className="overflow-x-auto">
         <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '900px' }}>
           <thead><tr style={{ background: 'var(--bg,#F8FAFC)' }}>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Descripción</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">DescripciÃ³n</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Tipo</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Monto</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Cuenta</th>
@@ -65,7 +66,7 @@ export function AccountingTable({ onEdit, onDelete }: { onEdit: (e: any) => void
                 <td className="px-4 py-3.5 text-[13.5px] font-semibold" style={{ color: 'var(--text)' }}>${Number(e.amount).toLocaleString()}</td>
                 <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--text)' }}>{e.account}</td>
                 <td className="px-4 py-3.5 text-[13px]" style={{ color: 'var(--text)' }}>{e.date}</td>
-                <td className="px-4 py-3.5 text-[13px] text-muted">{e.reference || '—'}</td>
+                <td className="px-4 py-3.5 text-[13px] text-muted">{e.reference || 'â€”'}</td>
                 <td className="px-4 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-1">
                     <button onClick={() => onEdit(e)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-hover transition-all"><Pencil className="w-3.5 h-3.5" style={{ color: 'var(--muted)' }} /></button>

@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
@@ -40,14 +41,11 @@ export function TicketsModal({ open, onClose, onSave, item }: TicketsModalProps)
     setSaving(true)
     const payload = { ...form, commentsCount: parseInt(form.commentsCount) || 0 }
     try {
-      const url = item
-        ? `http://localhost:4000/api/v1/tickets/${item.id}`
-        : 'http://localhost:4000/api/v1/tickets'
-      await fetch(url, {
-        method: item ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      if (item) {
+        await api.tickets.update(item.id, payload)
+      } else {
+        await api.tickets.create(payload)
+      }
       onSave()
       onClose()
     } finally {
@@ -66,7 +64,7 @@ export function TicketsModal({ open, onClose, onSave, item }: TicketsModalProps)
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>Título</label>
+            <label className="block text-[12.5px] font-semibold mb-1.5" style={{ color: 'var(--text)' }}>TÃ­tulo</label>
             <input value={form.title} onChange={e => set('title', e.target.value)} required
               className="w-full h-10 px-3 rounded-[10px] text-[13px]" style={{ border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }} />
           </div>
@@ -108,7 +106,7 @@ export function TicketsModal({ open, onClose, onSave, item }: TicketsModalProps)
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--text)', background: 'var(--bg)' }}>Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 h-10 rounded-[10px] text-[13px] font-semibold text-white" style={{ background: '#2563EB' }}>
-              {saving ? 'Guardando…' : item ? 'Actualizar' : 'Crear ticket'}
+              {saving ? 'Guardandoâ€¦' : item ? 'Actualizar' : 'Crear ticket'}
             </button>
           </div>
         </form>

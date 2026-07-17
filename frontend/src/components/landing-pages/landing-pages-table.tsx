@@ -1,4 +1,5 @@
 'use client'
+import { api } from '@/lib/api'
 
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -21,8 +22,8 @@ export function LandingPagesTable({ onEdit, onDelete }: { onEdit: (e: any) => vo
     const start = Date.now()
     setLoading(true)
     const [res, sum] = await Promise.all([
-      fetch(`http://localhost:4000/api/v1/landing-pages?page=${page}&limit=10`).then(r => r.json()),
-      fetch('http://localhost:4000/api/v1/landing-pages/summary').then(r => r.json()),
+      api.landingPages.list({ page, limit: 10 }),
+      api.landingPages.summary(),
     ])
     setPages(res.data)
     setTotal(res.total)
@@ -42,7 +43,7 @@ export function LandingPagesTable({ onEdit, onDelete }: { onEdit: (e: any) => vo
         <SummarySkeleton cards={3} />
       ) : summary && (
         <div className="grid grid-cols-3 gap-4 p-5 border-b" style={{ borderColor: 'var(--border)' }}>
-          <div><div className="text-[13px] font-medium text-muted">Total páginas</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.total}</div></div>
+          <div><div className="text-[13px] font-medium text-muted">Total pÃ¡ginas</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.total}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Publicadas</div><div className="text-[24px] font-bold text-green-500">{summary.publishedPages}</div></div>
           <div><div className="text-[13px] font-medium text-muted">Vistas totales</div><div className="text-[24px] font-bold" style={{ color: 'var(--text)' }}>{summary.totalViews.toLocaleString()}</div></div>
         </div>
@@ -50,11 +51,11 @@ export function LandingPagesTable({ onEdit, onDelete }: { onEdit: (e: any) => vo
       <div className="overflow-x-auto">
         <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '820px' }}>
           <thead><tr style={{ background: 'var(--bg,#F8FAFC)' }}>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Título</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">TÃ­tulo</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Slug</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Estado</th>
             <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Vistas</th>
-            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Conversión</th>
+            <th className="text-left px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">ConversiÃ³n</th>
             <th className="text-right px-4 py-3 text-[11.5px] font-semibold tracking-wider uppercase text-muted">Acciones</th>
           </tr></thead>
           <tbody>
@@ -82,7 +83,7 @@ export function LandingPagesTable({ onEdit, onDelete }: { onEdit: (e: any) => vo
         </table>
       </div>
       <div className="flex items-center justify-between px-5 py-3.5" style={{ borderTop: '1px solid var(--border)' }}>
-        <span className="text-[12.5px] text-muted">Mostrando <b style={{ color: 'var(--text)' }}>{pages.length}</b> de {total} páginas</span>
+        <span className="text-[12.5px] text-muted">Mostrando <b style={{ color: 'var(--text)' }}>{pages.length}</b> de {total} pÃ¡ginas</span>
         <div className="flex gap-1.5 items-center">
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
             className="w-8 h-8 border rounded-lg flex items-center justify-center disabled:opacity-40" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
